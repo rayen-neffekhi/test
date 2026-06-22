@@ -19,7 +19,7 @@ public class AbsenceRateService : IAbsenceRateService
     {
         var absences = _absenceRepository.GetByStudentId(studentId);
         var totalAbsences = absences.Count();
-        var absenceRate = (totalAbsences / DaysPerSchoolYear) * 100;
+        var absenceRate = ((double)totalAbsences / DaysPerSchoolYear) * 100;
 
         return absenceRate;
     }
