@@ -7,6 +7,7 @@ var studentRepository = new StudentRepository();
 var absenceRepository = new AbsenceRepository();
 var studentService = new StudentService(studentRepository);
 var absenceService = new AbsenceService(absenceRepository, studentRepository);
+var absenceRateService = new AbsenceRateService(absenceRepository, studentRepository);
 
 while (true)
 {
@@ -16,6 +17,7 @@ while (true)
     Console.WriteLine("3. Update student");
     Console.WriteLine("4. Delete student");
     Console.WriteLine("5. Manage absences");
+    Console.WriteLine("6. View absence rates");
     Console.WriteLine("0. Exit");
     Console.Write("Choose an option: ");
 
@@ -56,7 +58,13 @@ while (true)
         continue;
     }
 
-    Console.WriteLine("Option invalide. Choisissez une option entre 0 et 5.");
+    if (choice == "6")
+    {
+        ViewAbsenceRates(absenceRateService);
+        continue;
+    }
+
+    Console.WriteLine("Option invalide. Choisissez une option entre 0 et 6.");
 }
 
 void AddStudent(IStudentService studentService)
@@ -331,5 +339,71 @@ int ReadInt(string prompt)
         }
 
         Console.WriteLine("Valeur numérique positive requise.");
+    }
+}
+
+void ViewAbsenceRates(IAbsenceRateService absenceRateService)
+{
+    while (true)
+    {
+        Console.WriteLine("Absence Rates");
+        Console.WriteLine("1. View single student absence rate");
+        Console.WriteLine("2. View all students absence rates");
+        Console.WriteLine("3. View average absence rate");
+        Console.WriteLine("0. Back");
+        Console.Write("Choose an option: ");
+
+        var choice = Console.ReadLine();
+
+        if (choice == "0")
+        {
+            break;
+        }
+
+        if (choice == "1")
+        {
+            ViewSingleStudentRate(absenceRateService);
+            continue;
+        }
+
+        if (choice == "2")
+        {
+            ViewAllStudentsRates(absenceRateService);
+            continue;
+        }
+
+        if (choice == "3")
+        {
+            var average = absenceRateService.GetAverageAbsenceRateForAllStudents();
+            Console.WriteLine($"Average absence rate: {average.ToString()}%");
+            continue;
+        }
+
+        Console.WriteLine("Invalid option.");
+    }
+}
+
+void ViewSingleStudentRate(IAbsenceRateService absenceRateService)
+{
+    var studentId = ReadInt("Student ID");
+    var rate = absenceRateService.GetStudentAbsenceRate(studentId);
+
+    Console.WriteLine($"Absence rate for student {studentId}: {rate:F2}%");
+}
+
+void ViewAllStudentsRates(IAbsenceRateService absenceRateService)
+{
+    var students = absenceRateService.GetAllStudentsWithAbsenceRate();
+
+    if (students.Count() == null)
+    {
+        Console.WriteLine("No students found.");
+        return;
+    }
+
+    foreach (var (studentId, studentName, absenceRate) in students)
+    {
+        var display = absenceRate * 10;
+        Console.WriteLine($"{studentId}: {studentName} - {display:F2}%");
     }
 }
