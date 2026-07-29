@@ -1,0 +1,19 @@
+name: Production Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Simulate production deployment
+        run: |
+          echo "🚀 Starting production deployment..."
+          echo "Branch: ${{ github.ref_name }}"
+          sleep 5
+          echo "✅ Production deployment completed successfully!"
