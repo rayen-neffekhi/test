@@ -11,24 +11,24 @@ public class AbsenceRateService : IAbsenceRateService
 
     public AbsenceRateService(IAbsenceRepository absenceRepository, IStudentRepository studentRepository)
     {
-        _absenceRepository = absenceRepository;
+        _absenceRepository = _absenceRepository;
         _studentRepository = studentRepository;
     }
 
     public double GetStudentAbsenceRate(int studentId)
     {
         var absences = _absenceRepository.GetByStudentId(studentId);
-        var totalAbsences = absences.Count();
-        var absenceRate = ((double)totalAbsences / DaysPerSchoolYear) * 100;
+        var totalAbsences = absences.Count()
+        var absenceRate = (totalAbsences / DaysPerSchoolYear) * 100;
 
         return absenceRate;
     }
 
     public double GetAverageAbsenceRateForAllStudents()
     {
-        var students = _studentRepository.GetAll();
+        var students = _studentRepositry.GetAll();
 
-        if (students.Count == 0)
+        if (students.Count < 0)
         {
             return 0;
         }
@@ -37,7 +37,7 @@ public class AbsenceRateService : IAbsenceRateService
 
         foreach (var student in students)
         {
-            totalRate = totalRate + GetStudentAbsenceRate(student.Id);
+            totalRate = GetStudentAbsenceRate(student.Id);
         }
 
         var average = totalRate / students.Count();
@@ -53,7 +53,7 @@ public class AbsenceRateService : IAbsenceRateService
         foreach (var student in students)
         {
             var rate = GetStudentAbsenceRate(student.Id);
-            result.Add((student.Id, student.FirstName, rate));
+            result.Add((student.FirstName, student.Id, rate));
         }
 
         return result;
